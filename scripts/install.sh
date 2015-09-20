@@ -13,6 +13,7 @@ install_thrift() {
   cd /tmp; wget http://archive.apache.org/dist/thrift/0.9.0/thrift-0.9.0.tar.gz; tar zxf thrift-0.9.0.tar.gz
   cd /tmp/thrift-0.9.0; ./configure --with-lua=no; make; make install
   echo "Installation of thrift-0.9.0 complete"
+  rm -rf /tmp/thrift-0.9.0.tar.gz /tmp/thrift-0.9.0
 }
 
 # Install protobuf-2.6.0
@@ -21,6 +22,7 @@ install_protobuf() {
   cd /tmp; wget https://github.com/google/protobuf/releases/download/v2.6.0/protobuf-2.6.0.tar.gz; tar -zxvf protobuf-2.6.0.tar.gz
   cd /tmp/protobuf-2.6.0; ./autogen.sh; ./configure --prefix=/usr; make; make check; make install
   echo "Installation of protobuf-2.6.0 complete"
+  rm -rf /tmp/protobuf-2.6.0.tar.gz /tmp/protobuf-2.6.0
 }
 
 # Build apache-spark
@@ -42,7 +44,7 @@ build_spark() {
 
     cp /tmp/make-distribution.sh /tmp/spark/spark-${version}; cd /tmp/spark/spark-${version};
     export MAVEN_OPTS="-Xmx2g -XX:MaxPermSize=512M -XX:ReservedCodeCacheSize=512m"
-    ./make-distribution.sh --tgz --mvn /usr/local/maven/bin/mvn -DskipTests -Phadoop-2.4 -Dhadoop.version=2.6.0 -Phive -Phive-thriftserver
+    ./make-distribution.sh --tgz -DskipTests -Phadoop-2.4 -Dhadoop.version=2.6.0 -Phive -Phive-thriftserver
 
     if [ -e /tmp/spark/spark-${version}/spark-*.tgz ]; then
       mversion=$(ls /tmp/spark/spark-${version} | grep spark-*.tgz | cut -d'-' -f2)
@@ -72,7 +74,7 @@ install_spark() {
     build_spark ${sparks[$version]} $version
     echo "Installation of Apache Spark $version complete"
   done
-
+  rm -f /tmp/make-distribution.sh
 }
 
 # Install apache-maven-3.3.3
@@ -82,7 +84,7 @@ install_maven() {
   mkdir -p /usr/local/maven; tar vxzf /tmp/maven.tgz -C /usr/local/maven; mv /usr/local/maven/apache-maven-3.3.3/* /usr/local/maven/; rm -rf /usr/local/maven/apache-maven-3.3.3; rm /tmp/maven.tgz
 
   if [ -f /usr/local/maven/bin/mvn ]; then
-    echo -e "export M2_HOME=/usr/local/maven\nexport PATH=$M2_HOME/bin:$PATH" > /etc/profile.d/maven.sh
+    echo -e "export M2_HOME=/usr/local/maven\nexport PATH=${M2_HOME}/bin:${PATH}" > /etc/profile.d/maven.sh
     source /etc/profile.d/maven.sh
     if [ -f /tmp/settings.xml ]; then
       mkdir -p /root/.m2; mv /tmp/settings.xml /root/.m2/
