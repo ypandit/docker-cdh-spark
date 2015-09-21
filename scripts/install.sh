@@ -84,7 +84,8 @@ install_maven() {
   mkdir -p /usr/local/maven; tar vxzf /tmp/maven.tgz -C /usr/local/maven; mv /usr/local/maven/apache-maven-3.3.3/* /usr/local/maven/; rm -rf /usr/local/maven/apache-maven-3.3.3; rm /tmp/maven.tgz
 
   if [ -f /usr/local/maven/bin/mvn ]; then
-    echo -e "export M2_HOME=/usr/local/maven\nexport PATH=${M2_HOME}/bin:${PATH}" > /etc/profile.d/maven.sh
+    M2_HOME="/usr/local/maven"
+    echo -e "export M2_HOME=${M2_HOME}\nexport PATH=${M2_HOME}/bin:${PATH}" > /etc/profile.d/maven.sh
     source /etc/profile.d/maven.sh
     if [ -f /tmp/settings.xml ]; then
       mkdir -p /root/.m2; mv /tmp/settings.xml /root/.m2/
