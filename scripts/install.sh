@@ -4,7 +4,7 @@ declare -A sparks
 
 sparks["1.3.1"]="https://github.com/apache/spark/archive/v1.3.1.tar.gz"
 sparks["1.4.1"]="https://github.com/apache/spark/archive/v1.4.1.tar.gz"
-sparks["1.5.0"]="https://github.com/apache/spark/archive/v1.5.0.tar.gz"
+sparks["1.5.2"]="https://github.com/apache/spark/archive/v1.5.2.tar.gz"
 sparks["master"]="https://github.com/apache/spark/archive/master.tar.gz"
 
 # Install thrift-0.9.0
